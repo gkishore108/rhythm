@@ -12,13 +12,21 @@
     <div class="error">
       {{ typeError }}
     </div>
-    <button>Create Playlist</button>
+    <div v-if="!isPending">
+      <button>Create Playlist</button>
+    </div>
+    <div v-else>
+      <button disabled>Loading</button>
+    </div>
   </form>
 </template>
 
 <script>
 import { ref } from "vue";
 import useStorage from "@/composables/useStorage";
+import useCollection from "@/composables/useCollection";
+import getUser from "@/composables/getUser";
+import { timestamp } from "@/firebase/config";
 
 export default {
   setup() {
@@ -27,13 +35,30 @@ export default {
     const file = ref(null);
     const typeError = ref(null);
 
-    const { error, filePath, fileUrl, upload } = useStorage();
+    const { filePath, fileUrl, upload, isPending } = useStorage();
+
+    const { error, addDoc } = useCollection("playlists");
+
+    const { user } = getUser();
 
     const types = ["image/jpeg", "image/png"];
+
     const handleSubmit = async () => {
       if (file.value) {
         await upload(file.value);
-        console.log("Image uploaded and url is", fileUrl.value);
+        await addDoc({
+          title: title.value,
+          description: description.value,
+          userId: user.value.uid,
+          userName: user.value.displayName,
+          coverurl: fileUrl.value,
+          path: filePath.value,
+          createdAt: timestamp(),
+          songs: [],
+        });
+        if (!error.value) {
+          console.log("Playlist Added");
+        }
       }
     };
 
@@ -48,7 +73,14 @@ export default {
       }
     };
 
-    return { title, description, handleSubmit, handleChange, typeError };
+    return {
+      title,
+      description,
+      handleSubmit,
+      handleChange,
+      typeError,
+      isPending,
+    };
   },
 };
 </script>

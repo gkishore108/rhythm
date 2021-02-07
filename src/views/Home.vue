@@ -1,11 +1,23 @@
 <template>
   <div class="home">
-    <p>HomePage</p>
+    <div v-if="error" class="error">Could not fetch data</div>
+    <div v-if="documents">
+      <ListView :playlists="documents" />
+    </div>
   </div>
 </template>
 
 <script>
+import getCollection from "../composables/getCollection";
+import ListView from "@/components/ListView";
+
 export default {
   name: "Home",
+  components: { ListView },
+  setup() {
+    const { error, documents } = getCollection("playlists");
+
+    return { error, documents };
+  },
 };
 </script>
