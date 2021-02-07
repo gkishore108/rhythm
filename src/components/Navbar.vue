@@ -6,13 +6,20 @@
       /></router-link>
       <!-- <h1><router-link :to="{ name: 'Home' }"> Rhythm</router-link></h1> -->
       <div class="links">
-        <button v-if="user" @click="handleClick">Logout</button>
-        <router-link v-if="!user" class="btn" :to="{ name: 'Signup' }">
-          Signup
-        </router-link>
-        <router-link v-if="!user" class="btn" :to="{ name: 'Login' }">
-          Login
-        </router-link>
+        <div v-if="user">
+          <router-link :to="{ name: 'CreatePlaylist' }"
+            >Create Playlist</router-link
+          >
+          <button @click="handleClick">Logout</button>
+        </div>
+        <div v-else>
+          <router-link class="btn" :to="{ name: 'Signup' }">
+            Signup
+          </router-link>
+          <router-link class="btn" :to="{ name: 'Login' }">
+            Login
+          </router-link>
+        </div>
       </div>
     </nav>
   </div>
