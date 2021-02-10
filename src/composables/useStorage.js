@@ -26,7 +26,16 @@ const useStorage = () => {
     }
   };
 
-  return { error, filePath, fileUrl, upload, isPending };
+  const deleteImage = async (path) => {
+    const storageRef = projectStorage.ref(path);
+    try {
+      storageRef.delete();
+    } catch (err) {
+      error.value = err.message;
+    }
+  };
+
+  return { error, filePath, fileUrl, upload, deleteImage, isPending };
 };
 
 export default useStorage;
