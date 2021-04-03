@@ -1,5 +1,10 @@
 # rhythm
 
+A social netwrok music playlist manager created using Vue Js and Firebase.
+
+Website Live Link -> https://rhythm-d04e4.web.app/login
+
+
 ## Project setup
 ```
 npm install
